@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+	<title>Spring Boot OIDC Demo - Login</title>
+	<meta charset="utf-8" />
+</head>
+<body>
+
+<h1>Your Login Details</h1>
+<div>
+	Welcome <span style="font-weight:bold" th:text="${userName}"/>!
+	You logged in at the OAuth 2.0 Client <span style="font-weight:bold" th:text="${audience}"/>.
+</div>
+</body>
+</html>

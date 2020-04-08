@@ -1,0 +1,15 @@
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          idsvr:
+            client-name: Login with the Curity Identity Server
+            client-id: demo-client
+            client-secret: Secr3t
+            authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            scope: openid, profile
+        provider:
+          idsvr:
+            issuer-uri: https://idsvr.example.com/oauth/anonymous
