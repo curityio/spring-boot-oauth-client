@@ -1,7 +1,7 @@
 # OAuth 2.0 Client with Spring Boot
 
-[![Quality](https://curity.io/assets/images/badges/spring-boot-oauth-client-quality.svg)](https://curity.io/resources/code-examples/status/)
-[![Availability](https://curity.io/assets/images/badges/spring-boot-oauth-client-availability.svg)](https://curity.io/resources/code-examples/status/)
+[![Quality](https://img.shields.io/badge/quality-demo-red)](https://curity.io/resources/code-examples/status/)
+[![Availability](https://img.shields.io/badge/availability-source-blue)](https://curity.io/resources/code-examples/status/)
 
 This repository contains an example implementation that demonstrate how to use Spring Boot and Spring Security to create an OAuth 2.0 Client that authenticates users through the Curity Identity Server.
 
