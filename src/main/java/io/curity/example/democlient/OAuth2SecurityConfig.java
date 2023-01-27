@@ -2,6 +2,9 @@ package io.curity.example.democlient;
 
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.RSAKey;
+import io.curity.example.democlient.config.KeyStoreConfig;
+import io.curity.example.democlient.keystore.KeyStoreLoader;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
@@ -27,11 +30,13 @@ import java.util.function.Function;
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
+@EnableConfigurationProperties(KeyStoreConfig.class)
 public class OAuth2SecurityConfig {
 
-    private KeyPair clientKeys = ClientKeyLoader.fromKeyStore("client_keys.jks", "changeit", "demo-client");
+    private KeyPair clientKeys;
 
-    public OAuth2SecurityConfig() throws UnrecoverableKeyException, CertificateException, IOException, NoSuchAlgorithmException, KeyStoreException {
+    public OAuth2SecurityConfig(KeyStoreConfig config) throws UnrecoverableKeyException, CertificateException, IOException, NoSuchAlgorithmException, KeyStoreException {
+        clientKeys = KeyStoreLoader.getKeyPair(config.getFileName(), config.getPassword(), config.getAlias());
     }
 
     @Bean

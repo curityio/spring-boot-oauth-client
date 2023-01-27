@@ -25,3 +25,9 @@ spring:
         provider:
           idsvr:
             issuer-uri: https://idsvr.example.com/oauth/v2/oauth-anonymous
+
+client:
+  keystore:
+    file-name: client_keys.jks
+    password: changeit
+    alias: demo-client

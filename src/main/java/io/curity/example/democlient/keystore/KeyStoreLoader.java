@@ -1,4 +1,4 @@
-package io.curity.example.democlient;
+package io.curity.example.democlient.keystore;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,9 +12,9 @@ import java.security.UnrecoverableKeyException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 
-public class ClientKeyLoader {
+public class KeyStoreLoader {
 
-    public static KeyPair fromKeyStore(String keyStoreName, String password, String keyName) throws IOException, CertificateException, NoSuchAlgorithmException, KeyStoreException, UnrecoverableKeyException {
+    public static KeyPair getKeyPair(String keyStoreName, String password, String keyName) throws IOException, CertificateException, NoSuchAlgorithmException, KeyStoreException, UnrecoverableKeyException {
      KeyStore keyStore = KeyStore.getInstance("JKS");
      try (InputStream ksInputStream = ClassLoader.getSystemResourceAsStream(keyStoreName);) {
          keyStore.load(ksInputStream, password.toCharArray());
