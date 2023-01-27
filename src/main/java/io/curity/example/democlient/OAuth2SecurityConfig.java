@@ -12,11 +12,15 @@ import org.springframework.security.oauth2.client.registration.ClientRegistratio
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 
+import java.io.IOException;
+import java.security.KeyPair;
+import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.CertificateException;
 import java.security.interfaces.RSAPublicKey;
-import java.security.spec.InvalidKeySpecException;
 import java.util.UUID;
 import java.util.function.Function;
 
@@ -25,7 +29,10 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @Configuration
 public class OAuth2SecurityConfig {
 
-    private ClientKeyLoader clientKeys = new ClientKeyLoader();
+    private KeyPair clientKeys = ClientKeyLoader.fromKeyStore("client_keys.jks", "changeit", "demo-client");
+
+    public OAuth2SecurityConfig() throws UnrecoverableKeyException, CertificateException, IOException, NoSuchAlgorithmException, KeyStoreException {
+    }
 
     @Bean
     SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
@@ -59,18 +66,16 @@ public class OAuth2SecurityConfig {
     Function<ClientRegistration, JWK> jwkResolver = (clientRegistration) -> {
         if (clientRegistration.getClientAuthenticationMethod().equals(ClientAuthenticationMethod.PRIVATE_KEY_JWT)) {
             // This client uses RSA keys and signatures
-            try {
-                PublicKey publicKey = clientKeys.getRSAPublicKey();
-                PrivateKey privateKey = clientKeys.getRSAPrivateKey();
-                return new RSAKey.Builder((RSAPublicKey) publicKey)
-                        .privateKey(privateKey)
-                        .keyID(UUID.randomUUID().toString())
-                        .build();
-            } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-                throw new RuntimeException(e);
-            }
+            PublicKey publicKey = clientKeys.getPublic();
+            PrivateKey privateKey = clientKeys.getPrivate();
+            return new RSAKey.Builder((RSAPublicKey) publicKey)
+                    .privateKey(privateKey)
+                    .keyID(UUID.randomUUID().toString())
+                    .build();
         }
         return null;
     };
+
+
 
 }
