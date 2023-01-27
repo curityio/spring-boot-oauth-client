@@ -10,6 +10,8 @@ This example demonstrates two different ways for client authentication:
 1. Basic authentication with a client-id and a shared client secret
 2. JWT client assertion authentication with a client-id, private and public key
 
+The second option is used to implement the recommendation of [OAuth2.1 on client authentication](https://datatracker.ietf.org/doc/html/draft-ietf-oauth-v2-1-07#section-2.4), which is an updated and consolidated version of OAuth2.0.
+
 ## Configure the Client
 
 ### Using Basic Authentication
