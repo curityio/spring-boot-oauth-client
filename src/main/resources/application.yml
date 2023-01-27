@@ -1,15 +1,27 @@
+server:
+  port: 9090
+
 spring:
   security:
     oauth2:
       client:
         registration:
-          idsvr:
-            client-name: Login with the Curity Identity Server
-            client-id: demo-client
+          demo-basic-client:
+            client-name: Login with the Curity Identity Server (Basic Client)
+            client-id: demo-basic-client
             client-secret: Secr3t
             authorization-grant-type: authorization_code
             redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
             scope: openid, profile
+            provider: idsvr
+          demo-private-jwt-client:
+            client-name: Login with the Curity Identity Server (Private JWT Client)
+            client-id: demo-private-jwt-client
+            client-authentication-method: private_key_jwt
+            authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            scope: openid, profile
+            provider: idsvr
         provider:
           idsvr:
-            issuer-uri: https://idsvr.example.com/oauth/anonymous
+            issuer-uri: https://idsvr.example.com/oauth/v2/oauth-anonymous
