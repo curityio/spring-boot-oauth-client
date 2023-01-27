@@ -25,6 +25,10 @@ dependencies {
 	testImplementation 'org.springframework.security:spring-security-test'
 }
 
+bootRun {
+	systemProperties = System.properties
+}
+
 test {
 	useJUnitPlatform()
 }

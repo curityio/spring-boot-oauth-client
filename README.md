@@ -5,12 +5,27 @@
 
 This repository contains an example implementation that demonstrate how to use Spring Boot and Spring Security to create an OAuth 2.0 Client that authenticates users through the Curity Identity Server.
 
-There are only two things to consider when configuring the client in the Curity Identity Server:
+This example demonstrates two different ways for client authentication:
 
-* choose the authentication method `secret` and enter a secret. 
-* register the following redirect uri for your client: `http://localhost:8080/login/oauth2/code/idsvr`. 
+1. Basic authentication with a client-id and a shared client secret
+2. JWT client assertion authentication with a client-id, private and public key
 
-The redirect uri is the path of the application where the Curity Identity Server will redirect to after the user was authenticated. In this case we assume that this example will be hosted on `localhost`. 
+## Configure the Client
+
+### Using Basic Authentication
+Create a client `demo-basic-client` with the code flow capability. Register the following redirect URI for your client: `http://localhost:9090/login/oauth2/code/demo-basic-client`. In this case we assume that the application is hosted on `localhost`, adapt accordingly. The redirect URI is the path of the application where the Curity Identity Server will redirect to after the user was authenticated. This is an endpoint that Spring Boot sets up.
+
+Choose the authentication method `secret` and enter a secret. Under **Authorization** add the scopes `openid` and `profile`.
+
+### Using Private Key JWT
+Assume, there is a key pair that the client uses to create a self-signed JWT. The public key of the key pair needs to be uploaded to the Curity Identity Server. In the **Facilities** menu, under **Key and Cryptography**, select **Signing** and create a new **Signature Verification Key**. Enter a name, select `asymmetric` as type and upload an existing (public) key.
+
+Create a client `demo-private-jwt-client` with the code flow capability. 
+Register the following redirect URI for your client: `http://localhost:9090/login/oauth2/code/demo-private-jwt-client`. In this case we assume that the application is hosted on `localhost`, adapt accordingly. The redirect URI is the path of the application where the Curity Identity Server will redirect to after the user was authenticated. This is an endpoint that Spring Boot sets up.
+
+Choose the authentication method `asymmetric-key` and select the signature verification key created above. This is the public key that corresponds to the private key that the client uses to sign the JWT to authenticate itself.
+
+Under **Authorization** add the scopes `openid` and `profile`.
 
 ## Configure application.yml
 Update the client registration and provider to fit your settings.
@@ -21,13 +36,22 @@ spring:
     oauth2:
       client:
         registration:
-          idsvr:
-            client-name: Login with the Curity Identity Server
-            client-id: demo-client
+          demo-basic-client:
+            client-name: Login with the Curity Identity Server (Basic Client)
+            client-id: demo-basic-client
             client-secret: Secr3t
             authorization-grant-type: authorization_code
             redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
             scope: openid, profile
+            provider: idsvr
+          demo-private-jwt-client:
+            client-name: Login with the Curity Identity Server (Private JWT Client)
+            client-id: demo-private-jwt-client
+            client-authentication-method: private_key_jwt
+            authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            scope: openid, profile
+            provider: idsvr
         provider:
           idsvr:
             issuer-uri: https://idsvr.example.com/oauth/anonymous
@@ -40,7 +64,21 @@ To start the application run
 ./gradlew bootRun
 ```
 
-Open `http://localhost:8080` in your browser. Click on the link to login and fetch an access and ID token from the Curity Identity Server.
+Open `http://localhost:9090` in your browser. Click on the link to log in. Open one of the different options to fetch an access and ID token from the Curity Identity Server. After successful login the page displays the username and the name of the client used to integrate with the Cutiry Identity Server.
+
+### Configuring the Truststore
+
+The application must trust the HTTPS server certificate of the Curity Identity Server (from the `provider.issuer-uri`). Place the issuing CA certificate of the server certificate in a truststore. Use `keytool` for that purpose:
+
+```bash
+keytool -importcert -keystore localhost.truststore -file issuing-ca-cert.pem
+```
+
+Start the application with the truststore using JVM arguments:
+
+```bash
+./gradlew bootRun -Djavax.net.ssl.trustStore=/path/to/localhost.truststore -Djavax.net.ssl.trustStorePassword=changeit
+```
 
 ## More Information
 More information about OAuth 2.0, OpenID Connect and the Curity Identity Server can be found here:
