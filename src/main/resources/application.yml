@@ -33,7 +33,7 @@ spring:
 client:
   authentication:
     asymmetric-key:
-      key-store-file-name: client_keys.jks
+      key-store-file-name: demo-private-jwt-client.jks
       key-store-password: changeit
       key-store-alias: demo-client
       key-store-type: jks

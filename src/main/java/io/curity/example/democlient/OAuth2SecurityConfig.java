@@ -57,11 +57,14 @@ public class OAuth2SecurityConfig {
         // This is the default implementation.
         // It adds the required parameters for JWT based client authentication (`client_assertion_type`, `client_assertion`) to the authorization request.
         // For that, it creates the JWT from the keys provided by this application
-        NimbusJwtClientAuthenticationParametersConverter<OAuth2AuthorizationCodeGrantRequest> converter = new NimbusJwtClientAuthenticationParametersConverter<>(jwkResolver);
+        var converter = new NimbusJwtClientAuthenticationParametersConverter<OAuth2AuthorizationCodeGrantRequest>(jwkResolver);
         converter.setJwtClientAssertionCustomizer((context) -> {
             // You can customize the JWT here. For example, you can change a claim.
-            // Change the audience of the JWT from the token endpoint to token issuer name of the authorization server.
-            context.getClaims().claim("aud","https://localhost:8443/oauth/v2/oauth-anonymous");
+            // Change the audience of the JWT.
+            // The Curity Identity Server accepts JWTs that have an `aud` claim with either the token endpoint or the token issuer name
+            //context.getClaims().claim("aud","https://localhost:8443/oauth/v2/oauth-token"); //token endpoint
+            context.getClaims().claim("aud","https://localhost:8443/oauth/v2/oauth-anonymous"); // token issuer name
+
         });
         tokenResponseClient.addParametersConverter(converter);
         return tokenResponseClient;
