@@ -83,10 +83,12 @@ spring:
             provider: idsvr
 
 client:
-  keystore:
-    file-name: client_keys.jks
-    password: changeit
-    alias: demo-client
+  authentication:
+    asymmetric-key:
+      key-store-file-name: client_keys.jks
+      key-store-password: changeit
+      key-store-alias: demo-client
+      key-store-type: jks
 ```
 
 Don't forget to point to the Curity Identity Server as well. Specify the issuer URI (by default, this is the anonymous endpoint of the Curity Identity Server). Spring Boot uses this URI to load the OpenID Connect metadata from the server.
@@ -98,7 +100,7 @@ spring:
       client:
         provider:
           idsvr:
-            issuer-uri: https://idsvr.example.com/oauth/anonymous
+            issuer-uri: https://idsvr.example.com/oauth/v2/oauth-anonymous
 ```
 
 See [application.yml](src/main/resources/application.yml) for the complete configuration.
@@ -112,11 +114,11 @@ To start the application run
 
 Open `http://localhost:9090` in your browser. Click on the link to log in. 
 Open one of the different options to fetch an access and ID token from the Curity Identity Server. 
-After successful login the page displays the username and the name of the client used to integrate with the Cutiry Identity Server.
+After successful login the page displays the username and the name of the client used to integrate with the Curity Identity Server.
 
-### Configuring the Truststore
+### Configuring the Trust Store
 
-The application must trust the HTTPS server certificate of the Curity Identity Server (from the `provider.issuer-uri`). Place the issuing CA certificate of the server certificate in a truststore. 
+The application must trust the HTTPS server certificate of the Curity Identity Server. Place the issuing CA certificate of the server certificate and all intermediate CA certificate as well as the root CA certificate in a trust store. 
 
 Start the application with the truststore using JVM arguments:
 
@@ -126,30 +128,39 @@ Start the application with the truststore using JVM arguments:
 
 ## Generate Key and Trust Stores
 
-### Key Store for Client
+### Key Store for API Client Authentication
 
-The client needs keys to issue the self-signed JWT that it uses for authentication. Use `keytool` to generate a key pair and (self-signed) certificate:
+When authenticating with `private_key_jwt`, you need to specify keys to issue the self-signed JWT for the authentication. Use `keytool` to generate a key pair:
 
 ```bash
 keytool -genkey -alias demo-client -keyalg RSA -keystore client_keys.jks -keysize 2048 -dname "CN=Demo Client,O=Example"
 ```
 
-The Subject Name of the certificate do not matter. Make sure to remember the alias as it is used to identify the key pair. 
-For example, you need the alias when exporting the certificate and public key:
+The subject name of the certificate does not matter in this context. Make sure to remember the alias as it is used to identify the key pair. Put the key store file in the `resources` folder and update the parameters in `application.yml` accordingly.
+
+Export the certificate with the public key:
 
 ```bash
 keytool -exportcert -keystore client_keys.jks -alias demo-client -file demo-client.cer
 ```
 
-You can upload the certificate file to the Curity Identity Server as a **Signature Verification Key**.
+Upload the certificate file to the Curity Identity Server as a **Signature Verification Key** and configure the client with that key.
 
-### Trust Store for Server Certificate
+### Trust Store for Server Certificates
 
-Get hold of the certificate of the CA that issued the server certificate. Then use `keytool` to import the certificate in a (new) truststore:
+The `OAuthFilter` assumes that the authorization server's endpoints are served over HTTPS. 
+The API must trust the server certificate from the JWKS and OpenID metadata endpoints. 
+In test systems the server certificate may not be trusted by default. 
+To set up the trust, add the trust chain of the server certificate to a trust store. 
+Get hold of the certificate of the CA that issued the server certificate and all intermediate CA certificates up to the root CA ("trust chain"). 
+Then use `keytool` to import the certificate(s) in a (new) truststore:
 
 ```bash
 keytool -importcert -keystore localhost.truststore -file issuing-ca-cert.pem
 ```
+
+If prompted, trust the certificates. 
+If the server certificate is self-signed import only the certificate itself.
 
 ## More Information
 More information about OAuth 2.0, OpenID Connect and the Curity Identity Server can be found here:

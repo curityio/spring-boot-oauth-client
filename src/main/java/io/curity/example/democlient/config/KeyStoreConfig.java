@@ -2,35 +2,43 @@ package io.curity.example.democlient.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@ConfigurationProperties(prefix = "client.keystore")
+@ConfigurationProperties(prefix = "client.authentication.asymmetric-key")
 public class KeyStoreConfig {
 
-    private String fileName;
-    private String password;
-    private String alias;
+    private String keyStoreFileName;
+    private String keyStorePassword;
+    private String keyStoreAlias;
+    private String keyStoreType;
 
-
-    public String getFileName() {
-        return fileName;
+    public String getKeyStoreFileName() {
+        return keyStoreFileName;
     }
 
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
+    public void setKeyStoreFileName(String keyStoreFileName) {
+        this.keyStoreFileName = keyStoreFileName;
     }
 
-    public String getPassword() {
-        return password;
+    public String getKeyStorePassword() {
+        return keyStorePassword;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setKeyStorePassword(String keyStorePassword) {
+        this.keyStorePassword = keyStorePassword;
     }
 
-    public String getAlias() {
-        return alias;
+    public String getKeyStoreAlias() {
+        return keyStoreAlias;
     }
 
-    public void setAlias(String alias) {
-        this.alias = alias;
+    public void setKeyStoreAlias(String keyStoreAlias) {
+        this.keyStoreAlias = keyStoreAlias;
+    }
+
+    public String getKeyStoreType() {
+        return keyStoreType;
+    }
+
+    public void setKeyStoreType(String keyStoreType) {
+        this.keyStoreType = keyStoreType;
     }
 }

@@ -14,17 +14,17 @@ import java.security.cert.CertificateException;
 
 public class KeyStoreLoader {
 
-    public static KeyPair getKeyPair(String keyStoreName, String password, String keyName) throws IOException, CertificateException, NoSuchAlgorithmException, KeyStoreException, UnrecoverableKeyException {
-     KeyStore keyStore = KeyStore.getInstance("JKS");
+    public static KeyPair getKeyPair(String keyStoreType, String keyStoreName, String keyStorePassword, String alias) throws IOException, CertificateException, NoSuchAlgorithmException, KeyStoreException, UnrecoverableKeyException {
+     KeyStore keyStore = KeyStore.getInstance(keyStoreType);
      try (InputStream ksInputStream = ClassLoader.getSystemResourceAsStream(keyStoreName);) {
-         keyStore.load(ksInputStream, password.toCharArray());
+         keyStore.load(ksInputStream, keyStorePassword.toCharArray());
      }
 
-     Certificate clientCert = keyStore.getCertificate(keyName);
-     PublicKey publicKey1 = clientCert.getPublicKey();
-     PrivateKey privateKey1 = (PrivateKey) keyStore.getKey(keyName, password.toCharArray());
+     Certificate clientCert = keyStore.getCertificate(alias);
+     PublicKey publicKey = clientCert.getPublicKey();
+     PrivateKey privateKey = (PrivateKey) keyStore.getKey(alias, keyStorePassword.toCharArray());
 
-     KeyPair keyPair = new KeyPair(publicKey1, privateKey1);
+     KeyPair keyPair = new KeyPair(publicKey, privateKey);
      return keyPair;
 
     }

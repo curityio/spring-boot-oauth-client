@@ -1,5 +1,9 @@
-server:
-  port: 9090
+#server:
+#  port: 9443
+#  ssl:
+#    key-store: classpath:server.jks
+#    key-store-password: changeit
+#    key-store-type: jks
 
 spring:
   security:
@@ -27,7 +31,9 @@ spring:
             issuer-uri: https://idsvr.example.com/oauth/v2/oauth-anonymous
 
 client:
-  keystore:
-    file-name: client_keys.jks
-    password: changeit
-    alias: demo-client
+  authentication:
+    asymmetric-key:
+      key-store-file-name: client_keys.jks
+      key-store-password: changeit
+      key-store-alias: demo-client
+      key-store-type: jks
