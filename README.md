@@ -85,7 +85,7 @@ spring:
 client:
   authentication:
     asymmetric-key:
-      key-store-file-name: client_keys.jks
+      key-store-file-name: demo-private-jwt-client.jks
       key-store-password: changeit
       key-store-alias: demo-client
       key-store-type: jks
@@ -133,7 +133,7 @@ Start the application with the truststore using JVM arguments:
 When authenticating with `private_key_jwt`, you need to specify keys to issue the self-signed JWT for the authentication. Use `keytool` to generate a key pair:
 
 ```bash
-keytool -genkey -alias demo-client -keyalg RSA -keystore client_keys.jks -keysize 2048 -dname "CN=Demo Client,O=Example"
+keytool -genkey -alias demo-client -keyalg RSA -keystore demo-private-jwt-client.jks -keysize 2048 -dname "CN=Demo Client,O=Example"
 ```
 
 The subject name of the certificate does not matter in this context. Make sure to remember the alias as it is used to identify the key pair. Put the key store file in the `resources` folder and update the parameters in `application.yml` accordingly.
@@ -141,7 +141,7 @@ The subject name of the certificate does not matter in this context. Make sure t
 Export the certificate with the public key:
 
 ```bash
-keytool -exportcert -keystore client_keys.jks -alias demo-client -file demo-client.cer
+keytool -exportcert -keystore demo-private-jwt-client.jks -alias demo-client -file demo-client.cer
 ```
 
 Upload the certificate file to the Curity Identity Server as a **Signature Verification Key** and configure the client with that key.
