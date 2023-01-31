@@ -17,7 +17,7 @@ The second option is used to illustrate how to follow the recommendation of [OAu
 ### Using Basic Authentication
 
 * Create a client `demo-basic-client` with the code flow capability. 
-* Register the following redirect URI for your client: `http://localhost:9090/login/oauth2/code/demo-basic-client`. In this case we assume that the application is hosted on `localhost`, adapt accordingly. 
+* Register the following redirect URI for your client: `http://localhost:8080/login/oauth2/code/demo-basic-client`. In this case we assume that the application is hosted on `localhost`, adapt accordingly. 
  
 The redirect URI is the path of the application where the Curity Identity Server will redirect to after the user was authenticated. This is an endpoint that Spring Boot sets up.
 
@@ -34,7 +34,7 @@ Assume, there is a key pair that the client uses to create a self-signed JWT. Th
 Now, navigate to the token service profile to set up the client: 
 
 * Create a client `demo-private-jwt-client` with the code flow capability. 
-* Register the following redirect URI for your client: `http://localhost:9090/login/oauth2/code/demo-private-jwt-client`. In this case we assume that the application is hosted on `localhost`, adapt accordingly. 
+* Register the following redirect URI for your client: `http://localhost:8080/login/oauth2/code/demo-private-jwt-client`. In this case we assume that the application is hosted on `localhost`, adapt accordingly. 
  
 The redirect URI is the path of the application where the Curity Identity Server will redirect to after the user was authenticated. This is an endpoint that Spring Boot sets up.
 
@@ -112,7 +112,7 @@ To start the application run
 ./gradlew bootRun
 ```
 
-Open `http://localhost:9090` in your browser. Click on the link to log in. 
+Open `http://localhost:8080` in your browser. Click on the link to log in. 
 Open one of the different options to fetch an access and ID token from the Curity Identity Server. 
 After successful login the page displays the username and the name of the client used to integrate with the Curity Identity Server.
 
