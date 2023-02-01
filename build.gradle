@@ -1,18 +1,20 @@
 plugins {
-	id 'org.springframework.boot' version '2.2.6.RELEASE'
-	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
-	id 'java'
+	id 'org.springframework.boot' version '3.0.2'
 }
 
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'java'
+
 group = 'io.curity.example'
-version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '14'
+version = '0.0.2-SNAPSHOT'
+sourceCompatibility = '17'
 
 repositories {
 	mavenCentral()
 }
 
 dependencies {
+	annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
@@ -22,6 +24,10 @@ dependencies {
 	}
 	testImplementation 'io.projectreactor:reactor-test'
 	testImplementation 'org.springframework.security:spring-security-test'
+}
+
+bootRun {
+	systemProperties = System.properties
 }
 
 test {
