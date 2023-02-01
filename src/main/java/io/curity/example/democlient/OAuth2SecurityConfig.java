@@ -36,7 +36,7 @@ public class OAuth2SecurityConfig {
     private KeyPair clientKeys;
 
     public OAuth2SecurityConfig(KeyStoreConfig config) throws UnrecoverableKeyException, CertificateException, IOException, NoSuchAlgorithmException, KeyStoreException {
-        clientKeys = KeyStoreLoader.getKeyPair(config.getKeyStoreType(), config.getKeyStoreFileName(), config.getKeyStorePassword(), config.getKeyStoreAlias());
+        clientKeys = KeyStoreLoader.getKeyPair(config);
     }
 
     @Bean

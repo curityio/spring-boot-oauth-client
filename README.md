@@ -144,7 +144,7 @@ Export the certificate with the public key:
 keytool -exportcert -keystore demo-private-jwt-client.jks -alias demo-client -file demo-client.cer
 ```
 
-Upload the certificate file to the Curity Identity Server as a **Signature Verification Key** and configure the client with that key.
+Upload the certificate file to the Curity Identity Server as a **Signature Verification Key** in the **Facilities** -> **Keys and Cryptography** -> **Signing** section and configure the client with that key.
 
 ### Trust Store for Server Certificates
 
